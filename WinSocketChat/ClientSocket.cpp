@@ -13,3 +13,10 @@ void ClientSocket::ConnectToServer(const char ip[], int port)
 		exit(13);
 	}
 }
+
+void ClientSocket::SendInfoClient(std::string name)
+{
+	char temp[MAXSTRLEN]{};
+	strcpy(temp, name.c_str());
+	SendData(temp);
+}
