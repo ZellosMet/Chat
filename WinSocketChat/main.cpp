@@ -1,6 +1,7 @@
 #include"ServerSocket.h"
 #include"ClientSocket.h"
 #include<string>
+#include<thread>
 
 void main()
 {
@@ -23,10 +24,10 @@ void main()
 		server.StartHosting(port);
 		while (true)
 		{
-			char sReceaveMessage[MAXSTRLEN]{};
+			char sReceiveMessage[MAXSTRLEN]{};
 			std::cout << "Waiting..." << std::endl;
-			server.ReceiveData(sReceaveMessage, MAXSTRLEN);
-			std::string clientName = sReceaveMessage;
+			server.ReceiveData(sReceiveMessage, MAXSTRLEN);
+			std::string clientName = sReceiveMessage;
 			if (clientName.find(">>>") == 0)
 			{
 				clientName.erase(std::remove(clientName.begin(), clientName.end(), '>'), clientName.end());
@@ -34,9 +35,9 @@ void main()
 				server.set_NameClient(clientName);
 			}
 			else
-				std::cout << "Received: " << server.get_NameClient() << ": " << sReceaveMessage << std::endl;
+				std::cout << "Received: " << server.get_NameClient() << ": " << sReceiveMessage << std::endl;
 			server.SendDataMessage();
-			if (strcmp(sReceaveMessage, "end") == 0 || strcmp(sendMessage, "end") == 0) break;
+			if (strcmp(sReceiveMessage, "end") == 0 || strcmp(sendMessage, "end") == 0) break;
 		}
 	}
 	case 2:
@@ -48,12 +49,12 @@ void main()
 		client.SendInfoClient(">>>" + clientName);
 		while (true)
 		{
-			char cReceaveMessage[MAXSTRLEN]{};
+			char cReceiveMessage[MAXSTRLEN]{};
 			client.SendDataMessage();
 			std::cout << "Waiting..." << std::endl;
-			client.ReceiveData(cReceaveMessage, MAXSTRLEN);
-			std::cout << "Received:" << cReceaveMessage << std::endl;
-			if (strcmp(cReceaveMessage, "end") == 0 || strcmp(sendMessage, "end") == 0) break;
+			client.ReceiveData(cReceiveMessage, MAXSTRLEN);
+			std::cout << "Received:" << cReceiveMessage << std::endl;
+			if (strcmp(cReceiveMessage, "end") == 0 || strcmp(sendMessage, "end") == 0) break;
 		}
 		client.CloseConnection();
 	}
