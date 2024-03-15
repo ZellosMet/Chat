@@ -4,6 +4,9 @@
 
 void main()
 {
+	setlocale(LC_ALL, "");
+	//CONST int NAME_SIZE = 32;
+	//CHAR sz_username[NAME_SIZE] = {"Server"};
 	int nChoice;
 	int port = 22000;
 	std::string ipAddress;
@@ -22,27 +25,40 @@ void main()
 			server.StartHosting(port);
 			while (true)
 			{
-				std::cout << "Waiting..." << std::endl;
+				ZeroMemory(receaveMessage, MAXSTRLEN);
+				//std::cout << "Waiting..." << std::endl;
 				server.ReceiveData(receaveMessage, MAXSTRLEN);
-				std::cout << "Received: " << receaveMessage << std::endl;
-				server.SendDataMessage();
-				if (strcmp(receaveMessage, "end") == 0 || strcmp(sendMessage, "end") == 0) break;
+				std::cout /*<< "Received: "*/ << receaveMessage << std::endl;
+				if (strstr(receaveMessage, "bye"))
+				{
+					server.AcceptSocket();
+				}
+				strcpy(sendMessage, server.SendDataMessage());
+				if (strstr(sendMessage, "bye")) break;
 			}
 		}
+		break;
 		case 2:
 		{
-			std::cout << "Enter IP addres: "; std::cin >> ipAddress;
-			ClientSocket client;
+			std::string sz_username;
+			ipAddress = "127.0.0.1";
+			//std::cout << "Enter IP addres: "; std::cin >> ipAddress;
+			std::cout << "Enter username: "; std::cin >> sz_username;
+			ClientSocket client = sz_username;;
 			client.ConnectToServer(ipAddress.c_str(), port);
 			while (true)
 			{
-				client.SendDataMessage();
-				std::cout << "Waiting..." << std::endl;
+				ZeroMemory(receaveMessage, MAXSTRLEN);
+				strcpy(sendMessage, client.SendDataMessage());
+				if (strstr(sendMessage, "bye")) break;
+				//sendMessage = client.SendDataMessage();
+				//std::cout << "Waiting..." << std::endl;
 				client.ReceiveData(receaveMessage, MAXSTRLEN);
-				std::cout << "Received:" << receaveMessage << std::endl;
-				if (strcmp(receaveMessage, "end") == 0 || strcmp(sendMessage, "end") == 0) break;
+				std::cout /*<< "Received:"*/ << receaveMessage << std::endl;
+				if (strstr(receaveMessage, "bye")) break;
 			}
 			client.CloseConnection();
-		}	
+		}
+		break;
 	}
 }

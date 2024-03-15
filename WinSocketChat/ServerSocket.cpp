@@ -3,7 +3,7 @@
 void ServerSocket::Listen()
 {
 	std::cout << "Waiting for client..." << std::endl;
-	if (listen(_socket, 1) == SOCKET_ERROR)
+	if (listen(_socket, 10) == SOCKET_ERROR)
 	{
 		std::cerr << "Listen error" << std::endl;
 		system("PAUSE");
@@ -34,4 +34,12 @@ void ServerSocket::StartHosting(int port)
 {
 	Bind(port);
 	Listen();
+}
+
+void ServerSocket::AcceptSocket()
+{
+	acceptSocket = accept(_socket, NULL, NULL);
+	while (acceptSocket == SOCKET_ERROR)
+		acceptSocket = accept(_socket, NULL, NULL);
+	_socket = acceptSocket;
 }

@@ -7,4 +7,5 @@ public:
 	void Listen();
 	void Bind(int port);
 	void StartHosting(int port);
+	void AcceptSocket();
 };

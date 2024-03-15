@@ -18,6 +18,11 @@ Socket::Socket()
 	}
 }
 
+Socket::Socket(std::string sz_username) : Socket()
+{
+	this->username = sz_username;
+}
+
 Socket::~Socket()
 {
 	WSACleanup();
@@ -38,14 +43,18 @@ bool Socket::ReceiveData(char* buffer, int size)
 
 void Socket::CloseConnection()
 {
+	std::cout << "Connection closing..." << std::endl;
 	closesocket(_socket);
 }
 
-void Socket::SendDataMessage()
+CONST CHAR* Socket::SendDataMessage()
 {
 	CHAR message[MAXSTRLEN]{};
+	CHAR buffer[MAXSTRLEN]{};
 	std::cout << "Enter message: ";
 	std::cin.ignore();
-	std::cin.get(message, MAXSTRLEN);
+	std::cin.get(buffer, MAXSTRLEN);
+	sprintf(message, "%s: %s", username.c_str(), buffer);
 	SendData(message);
+	return message;
 }
